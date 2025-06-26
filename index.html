@@ -352,6 +352,7 @@
         <div class="progress-dot" data-slide="5"></div>
         <div class="progress-dot" data-slide="6"></div>
         <div class="progress-dot" data-slide="7"></div>
+        <div class="progress-dot" data-slide="8"></div>
     </div>
 
     <div class="slide-container">
@@ -679,7 +680,7 @@
 
             <!-- Slide 8: Conclusão -->
             <div class="slide" id="slide-7">
-                <div class="slide-number">8 / 8</div>
+                <div class="slide-number">8 / 9</div>
                 <div class="chat-message w-full">
                     <p class="font-bold text-lg text-indigo-800">
                         <i class="fas fa-user-tie mr-2"></i>Apresentador (Final):
@@ -737,6 +738,70 @@
                     </p>
                 </div>
             </div>
+
+            <!-- Slide 9: Sobre o Apresentador -->
+            <div class="slide" id="slide-8">
+                <div class="slide-number">9 / 9</div>
+                <div class="text-center w-full">
+                    <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-8">
+                        Sobre o Apresentador
+                    </h1>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
+                        <!-- Foto do GitHub -->
+                        <div class="relative">
+                            <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-indigo-500 shadow-2xl">
+                                <img id="github-avatar" 
+                                     src="https://github.com/maxsonferovante.png" 
+                                     alt="Maxson Almeida Ferovante"
+                                     class="w-full h-full object-cover"
+                                     onerror="this.src='https://via.placeholder.com/200x200/6366f1/ffffff?text=M'">
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 bg-green-500 w-8 h-8 rounded-full border-4 border-white"></div>
+                        </div>
+                        
+                        <!-- Informações Pessoais -->
+                        <div class="text-left max-w-md">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">Maxson Almeida Ferovante</h2>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <i class="fas fa-code text-indigo-600 text-xl mr-3"></i>
+                                    <span class="text-gray-700">Backend Developer</span>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <i class="fas fa-graduation-cap text-green-600 text-xl mr-3"></i>
+                                    <span class="text-gray-700">Estudante de Filosofia - UFSC</span>
+                                </div>                                                    
+                            </div>
+                        </div>
+                    </div>
+                                        
+                    <!-- Links Sociais -->
+                    <div class="mt-8 flex justify-center gap-6">
+                        <a href="https://github.com/maxsonferovante" 
+                           target="_blank" 
+                           class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105">
+                            <i class="fab fa-github mr-2"></i>
+                            GitHub
+                        </a>
+                        <a href="https://www.linkedin.com/in/maxson-almeida/" 
+                           target="_blank" 
+                           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105">
+                            <i class="fab fa-linkedin mr-2"></i>
+                            LinkedIn
+                        </a>                        
+                    </div>
+                    
+                    <!-- Mensagem Final -->
+                    <div class="mt-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl border border-indigo-200">                        
+                        <p class="text-md text-gray-600 mt-4 font-semibold">
+                            Obrigado pela atenção! 🚀
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Navigation Buttons -->
@@ -745,7 +810,7 @@
                 <i class="fas fa-chevron-left mr-2"></i>Anterior
             </button>
             <div class="flex items-center gap-2 text-sm text-gray-600">
-                <span id="slideCounter">1 / 8</span>
+                <span id="slideCounter">1 / 9</span>
             </div>
             <button id="nextBtn" class="nav-button">
                 Próximo<i class="fas fa-chevron-right ml-2"></i>
