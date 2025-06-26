@@ -7,10 +7,12 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,229 +21,735 @@
             padding: 20px;
             box-sizing: border-box;
         }
+        
         .slide-container {
-            background-color: #ffffff;
-            border-radius: 1.5rem; /* rounded-3xl */
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
-            padding: 2.5rem; /* p-10 */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            padding: 2.5rem;
             width: 100%;
-            max-width: 960px; /* lg:max-w-4xl */
-            min-height: 540px; /* min-h-[540px] for a consistent slide height */
+            max-width: 1100px;
+            min-height: 650px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            overflow: hidden; /* Ensure images don't overflow */
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        
         .slide {
-            display: none; /* Hidden by default */
-            animation: fadeIn 0.8s ease-out forwards;
+            display: none;
+            animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             height: 100%;
-            display: flex; /* Flex to vertically center content */
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start; /* Align text to start */
+            align-items: flex-start;
+            position: relative;
         }
+        
         .slide.active {
-            display: flex; /* Show active slide */
+            display: flex;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        @keyframes slideInRight {
+            from { 
+                opacity: 0; 
+                transform: translateX(30px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0) scale(1); 
+            }
         }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
         .nav-button {
-            background-color: #6366f1; /* indigo-500 */
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
-            padding: 0.75rem 1.5rem; /* py-3 px-6 */
-            border-radius: 0.75rem; /* rounded-xl */
-            font-weight: 600; /* font-semibold */
-            transition: background-color 0.3s ease;
+            padding: 0.875rem 2rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
             cursor: pointer;
             border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-        .nav-button:hover {
-            background-color: #4f46e5; /* indigo-600 */
+        
+        .nav-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
         }
+        
         .nav-button:disabled {
-            background-color: #9ca3af; /* gray-400 */
+            background: #9ca3af;
             cursor: not-allowed;
+            transform: none;
             box-shadow: none;
         }
+        
         .chat-message {
-            background-color: #e0e7ff; /* indigo-100 */
-            border-radius: 1rem; /* rounded-2xl */
-            padding: 1rem 1.5rem; /* p-4 px-6 */
-            margin-bottom: 0.75rem; /* mb-3 */
-            align-self: flex-start; /* Speaker's message */
-            max-width: 90%;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            border-radius: 1.5rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+            max-width: 85%;
             text-align: left;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+            border-left: 4px solid #6366f1;
+            position: relative;
+            animation: fadeInLeft 0.6s ease-out;
         }
+        
         .llm-response {
-            background-color: #d1fae5; /* green-100 */
-            border-radius: 1rem; /* rounded-2xl */
-            padding: 1rem 1.5rem; /* p-4 px-6 */
-            margin-top: 0.75rem; /* mt-3 */
-            align-self: flex-end; /* LLM's response */
-            max-width: 90%;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border-radius: 1.5rem;
+            padding: 1.5rem 2rem;
+            margin-top: 1rem;
+            align-self: flex-end;
+            max-width: 85%;
             text-align: right;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+            border-right: 4px solid #22c55e;
+            position: relative;
+            animation: fadeInRight 0.6s ease-out;
         }
-        .slide-image {
-            max-width: 80%;
-            max-height: 200px; /* Limit image height */
-            margin: 1.5rem auto; /* my-6, centered */
+        
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .concept-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem auto;
+            position: relative;
+        }
+        
+        .cvj-triangle {
+            width: 0;
+            height: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-bottom: 140px solid #10b981;
+            position: relative;
+            margin: 2rem auto;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .cvj-labels {
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .interactive-icon {
+            font-size: 3rem;
+            color: #6366f1;
+            margin: 1rem;
+            animation: pulse 2s infinite;
+            transition: transform 0.3s ease;
+        }
+        
+        .interactive-icon:hover {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        
+        .gettier-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border-radius: 1rem;
+            border: 2px dashed #f59e0b;
+        }
+        
+        .gettier-step {
+            text-align: center;
+            padding: 1rem;
+            background: white;
             border-radius: 0.75rem;
-            object-fit: contain; /* Ensure image fits without distortion */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+            transition: transform 0.3s ease;
+        }
+        
+        .gettier-step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .llm-brain {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            border-radius: 50%;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .probability-waves {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(249, 115, 22, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .probability-waves:nth-child(2) {
+            animation-delay: 0.5s;
+            width: 120%;
+            height: 120%;
+        }
+        
+        .probability-waves:nth-child(3) {
+            animation-delay: 1s;
+            width: 140%;
+            height: 140%;
+        }
+        
+        .balance-scale {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 2rem auto;
+            position: relative;
+        }
+        
+        .scale-arm {
+            width: 200px;
+            height: 4px;
+            background: #374151;
+            position: relative;
+            margin: 0 20px;
+        }
+        
+        .scale-plate {
+            width: 80px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 0.5rem;
+            position: absolute;
+            top: -40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        
+        .progress-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+        
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .progress-dot.active {
+            background: #6366f1;
+            transform: scale(1.2);
+        }
+        
+        .slide-number {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: #6366f1;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .quote-highlight {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 1rem 0;
+            animation: pulse 3s infinite;
         }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .slide-container {
                 padding: 1.5rem;
-                min-height: 400px;
+                min-height: 500px;
             }
             .nav-button {
-                padding: 0.5rem 1rem;
-            }
-            .chat-message, .llm-response {
-                padding: 0.75rem 1rem;
+                padding: 0.625rem 1.25rem;
                 font-size: 0.9rem;
             }
-            .slide-image {
-                max-height: 150px;
+            .chat-message, .llm-response {
+                padding: 1rem 1.25rem;
+                font-size: 0.9rem;
+                max-width: 95%;
+            }
+            .interactive-icon {
+                font-size: 2rem;
+            }
+            .cvj-triangle {
+                border-left-width: 50px;
+                border-right-width: 50px;
+                border-bottom-width: 90px;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- Indicador de progresso -->
+    <div class="progress-indicator">
+        <div class="progress-dot active" data-slide="0"></div>
+        <div class="progress-dot" data-slide="1"></div>
+        <div class="progress-dot" data-slide="2"></div>
+        <div class="progress-dot" data-slide="3"></div>
+        <div class="progress-dot" data-slide="4"></div>
+        <div class="progress-dot" data-slide="5"></div>
+        <div class="progress-dot" data-slide="6"></div>
+        <div class="progress-dot" data-slide="7"></div>
+    </div>
+
     <div class="slide-container">
         <div id="slides-wrapper" class="flex-grow flex flex-col justify-center items-start">
+            
             <!-- Slide 1: Abertura e Pergunta Inicial -->
             <div class="slide active" id="slide-0">
-                <h1 class="text-4xl font-bold text-indigo-800 mb-6 text-center w-full">Gettier e o Dilema da Inteligência Artificial</h1>
-                <p class="text-2xl font-semibold text-gray-700 mb-4 text-center w-full">Se uma IA "sabe" algo, é realmente conhecimento?</p>
-                <div class="chat-message mt-8 w-full">
-                    <p class="font-bold text-lg text-indigo-800">Apresentador:</p>
-                    <p class="text-gray-800">Olá, pessoal! Obrigado por estarem aqui. Vamos direto ao ponto:</p>
-                    <p class="text-gray-800">Quando uma IA responde corretamente a uma pergunta, ela realmente “sabe” aquela resposta ou apenas está reproduzindo algo?</p>
+                <div class="slide-number">1 / 8</div>
+                <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-6 text-center w-full">
+                    Gettier e o Dilema da Inteligência Artificial
+                </h1>
+                <p class="text-2xl font-semibold text-gray-700 mb-8 text-center w-full">
+                    Se uma IA "sabe" algo, é realmente conhecimento?
+                </p>
+                
+                <div class="concept-diagram">
+                    <i class="fas fa-brain interactive-icon"></i>
+                    <i class="fas fa-question-circle interactive-icon" style="color: #f59e0b;"></i>
+                    <i class="fas fa-robot interactive-icon" style="color: #10b981;"></i>
                 </div>
-                <img src="https://placehold.co/400x200/9ca3af/ffffff?text=IA+pode+saber+algo?%0A%3F" alt="IA pode saber algo?" class="slide-image">
+                
+                <div class="chat-message mt-4 w-full">
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-user-tie mr-2"></i>Apresentador:
+                    </p>
+                    <p class="text-gray-800">Olá, pessoal! Obrigado por estarem aqui. Vamos direto ao ponto:</p>
+                    <p class="text-gray-800 mt-2">
+                        <strong>Quando uma IA responde corretamente a uma pergunta, ela realmente "sabe" aquela resposta ou apenas está reproduzindo algo?</strong>
+                    </p>
+                </div>
             </div>
 
             <!-- Slide 2: O que é uma LLM? -->
             <div class="slide" id="slide-1">
+                <div class="slide-number">2 / 8</div>
                 <div class="chat-message w-full">
-                    <p class="font-bold text-lg text-indigo-800">Apresentador:</p>
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-user-tie mr-2"></i>Apresentador:
+                    </p>
                     <p class="text-gray-800">Ótima questão! Mas afinal, o que são essas LLMs que tanto ouvimos falar?</p>
                 </div>
-                <div class="llm-response w-full mt-4">
-                    <p class="font-bold text-lg text-green-800">Resposta (do LLM):</p>
-                    <p class="text-gray-800">**LLMs (Large Language Models)**, ou Grandes Modelos de Linguagem, são inteligências artificiais treinadas com bilhões de palavras. Elas aprendem padrões estatísticos da linguagem e, com isso, conseguem prever qual é a próxima palavra mais provável em um texto.</p>
-                    <p class="text-gray-800 mt-2">Pense nelas como um super “completar frase” – só que muito, muito poderoso. Elas não "entendem" o significado, mas são mestres em combinar palavras de forma coerente e contextualmente relevante.</p>
+
+                <div class="llm-brain">
+                    <i class="fas fa-microchip text-white text-4xl"></i>
+                    <div class="probability-waves"></div>
+                    <div class="probability-waves"></div>
+                    <div class="probability-waves"></div>
                 </div>
-                <img src="https://placehold.co/450x200/6366f1/ffffff?text=O+ceu+esta...%0A%E2%86%92+%5Bazul%5D+%5Bnublado%5D+%5Bcaindo%5D" alt="Predição de palavras" class="slide-image">
+
+                <div class="llm-response w-full">
+                    <p class="font-bold text-lg text-green-800">
+                        <i class="fas fa-robot mr-2"></i>Resposta (LLM):
+                    </p>
+                    <p class="text-gray-800">
+                        <strong>LLMs (Large Language Models)</strong>, ou Grandes Modelos de Linguagem, são inteligências artificiais treinadas com bilhões de palavras. Elas aprendem padrões estatísticos da linguagem e, com isso, conseguem prever qual é a próxima palavra mais provável em um texto.
+                    </p>
+                    <p class="text-gray-800 mt-2">
+                        <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                        Pense nelas como um super "completar frase" – só que muito, muito poderoso. Elas não "entendem" o significado, mas são mestres em combinar palavras de forma coerente e contextualmente relevante.
+                    </p>
+                </div>
+
+                <div class="gettier-diagram">
+                    <div class="gettier-step">
+                        <i class="fas fa-file-text text-blue-500 text-xl mb-2"></i>
+                        <p class="text-sm font-semibold">Texto</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-400 text-xl"></i>
+                    <div class="gettier-step">
+                        <i class="fas fa-calculator text-orange-500 text-xl mb-2"></i>
+                        <p class="text-sm font-semibold">Padrões</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-400 text-xl"></i>
+                    <div class="gettier-step">
+                        <i class="fas fa-comments text-green-500 text-xl mb-2"></i>
+                        <p class="text-sm font-semibold">Resposta</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Slide 3: Conhecimento: CVJ e Gettier (Parte 1) -->
+            <!-- Slide 3: Conhecimento: CVJ -->
             <div class="slide" id="slide-2">
+                <div class="slide-number">3 / 8</div>
                 <div class="chat-message w-full">
-                    <p class="font-bold text-lg text-indigo-800">Apresentador:</p>
-                    <p class="text-gray-800">Ok, mas então... o que é “conhecer” algo? Como a filosofia tradicional entende isso?</p>
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-user-tie mr-2"></i>Apresentador:
+                    </p>
+                    <p class="text-gray-800">Ok, mas então... o que é "conhecer" algo? Como a filosofia tradicional entende isso?</p>
                 </div>
-                <div class="llm-response w-full mt-4">
-                    <p class="font-bold text-lg text-green-800">Resposta (do LLM):</p>
-                    <p class="text-gray-800">Desde Platão, a definição clássica de conhecimento é **crença verdadeira justificada (CVJ)**:</p>
-                    <ul class="list-disc list-inside text-gray-800 ml-4 mt-2">
-                        <li>Você acredita em algo.</li>
-                        <li>Esse algo é verdadeiro.</li>
-                        <li>E você tem uma justificação para acreditar naquilo.</li>
-                    </ul>
+
+                <div class="concept-diagram">
+                    <div class="cvj-triangle">
+                        <div class="cvj-labels" style="bottom: 20px; left: 50%; transform: translateX(-50%);">
+                            <i class="fas fa-check-circle mr-1"></i>VERDADE
+                        </div>
+                        <div class="cvj-labels" style="top: -30px; left: -40px;">
+                            <i class="fas fa-heart mr-1"></i>CRENÇA
+                        </div>
+                        <div class="cvj-labels" style="top: -30px; right: -50px;">
+                            <i class="fas fa-balance-scale mr-1"></i>JUSTIFICAÇÃO
+                        </div>
+                    </div>
                 </div>
-                <img src="https://placehold.co/300x150/10b981/ffffff?text=CREN%C3%87A%0A%E2%96%B3%0AVerdade+%26+Justifica%C3%A7%C3%A3o" alt="Triângulo CVJ" class="slide-image">
+
+                <div class="llm-response w-full">
+                    <p class="font-bold text-lg text-green-800">
+                        <i class="fas fa-robot mr-2"></i>Resposta (LLM):
+                    </p>
+                    <p class="text-gray-800">
+                        Desde Platão, a definição clássica de conhecimento é <strong>crença verdadeira justificada (CVJ)</strong>:
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div class="text-center p-4 bg-white bg-opacity-50 rounded-lg">
+                            <i class="fas fa-heart text-red-500 text-2xl mb-2"></i>
+                            <p class="font-semibold">Você acredita</p>
+                        </div>
+                        <div class="text-center p-4 bg-white bg-opacity-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-500 text-2xl mb-2"></i>
+                            <p class="font-semibold">É verdadeiro</p>
+                        </div>
+                        <div class="text-center p-4 bg-white bg-opacity-50 rounded-lg">
+                            <i class="fas fa-balance-scale text-blue-500 text-2xl mb-2"></i>
+                            <p class="font-semibold">Tem justificação</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Slide 4: Conhecimento: CVJ e Gettier (Parte 2) -->
+            <!-- Slide 4: Problema de Gettier -->
             <div class="slide" id="slide-3">
+                <div class="slide-number">4 / 8</div>
                 <div class="llm-response w-full">
-                    <p class="font-bold text-lg text-green-800">Apresentador (Continuação):</p>
-                    <p class="text-gray-800">Parece uma definição sólida, não é? No entanto, em 1963, Edmund Gettier nos apresentou um problema. Ele mostrou que é possível ter uma crença verdadeira e justificada que, intuitivamente, não é conhecimento. Isso acontece devido à "sorte epistêmica" ou "acaso".</p>
-                    <p class="font-bold text-lg text-indigo-800 mt-4">Exemplo clássico:</p>
-                    <p class="text-gray-800">Smith vê provas de que Jones vai conseguir o emprego e tem 10 moedas no bolso. Então, Smith conclui: “O homem que vai conseguir o emprego tem 10 moedas no bolso.”</p>
-                    <p class="text-gray-800 mt-2">Mas quem consegue o emprego é o próprio Smith, que – por coincidência – também tem 10 moedas no bolso. A crença era verdadeira e justificada, mas a verdade veio por acaso.</p>
+                    <p class="font-bold text-lg text-green-800">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>O Problema de Gettier:
+                    </p>
+                    <p class="text-gray-800">
+                        Em 1963, Edmund Gettier mostrou que CVJ não é suficiente! É possível ter uma crença verdadeira e justificada que, intuitivamente, não é conhecimento devido à <strong>"sorte epistêmica"</strong>.
+                    </p>
                 </div>
-                <img src="https://placehold.co/450x200/ef4444/ffffff?text=Caso+Gettier:%0AJones+%26+Smith" alt="Ilustração do Caso Gettier" class="slide-image">
-            </div>
 
-            <!-- Slide 5: As LLMs são “casos Gettier” digitais? (Parte 1) -->
-            <div class="slide" id="slide-4">
+                <div class="gettier-diagram">
+                    <div class="gettier-step">
+                        <i class="fas fa-user text-blue-500 text-xl mb-2"></i>
+                        <p class="text-xs font-semibold">Smith vê provas sobre Jones</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-400 text-xl"></i>
+                    <div class="gettier-step">
+                        <i class="fas fa-coins text-yellow-500 text-xl mb-2"></i>
+                        <p class="text-xs font-semibold">"Quem conseguir o emprego tem 10 moedas"</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-400 text-xl"></i>
+                    <div class="gettier-step">
+                        <i class="fas fa-dice text-red-500 text-xl mb-2"></i>
+                        <p class="text-xs font-semibold">Smith consegue por coincidência!</p>
+                    </div>
+                </div>
+
                 <div class="chat-message w-full">
-                    <p class="font-bold text-lg text-indigo-800">Apresentador:</p>
-                    <p class="text-gray-800">Se a sorte pode invalidar o conhecimento humano, o que dizer das LLMs? Será que as respostas certas delas são apenas “acertos por sorte”?</p>
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-lightbulb mr-2"></i>Exemplo clássico:
+                    </p>
+                    <p class="text-gray-800">
+                        Smith vê provas de que Jones vai conseguir o emprego e tem 10 moedas. Então conclui: 
+                        <em>"O homem que vai conseguir o emprego tem 10 moedas no bolso."</em>
+                    </p>
+                    <p class="text-gray-800 mt-2">
+                        <i class="fas fa-surprise text-orange-500 mr-2"></i>
+                        Mas quem consegue o emprego é o próprio Smith, que – por coincidência – também tem 10 moedas! 
+                        A crença era verdadeira e justificada, mas a verdade veio por <strong>acaso</strong>.
+                    </p>
                 </div>
-                <div class="llm-response w-full mt-4">
-                    <p class="font-bold text-lg text-green-800">Resposta (do LLM):</p>
-                    <p class="text-gray-800">Sim, em um sentido crítico, podemos argumentar que muitas respostas das LLMs se assemelham a "casos Gettier" digitais. As LLMs não “entendem” ou “sabem” no sentido humano, elas operam com modelos probabilísticos e geram a resposta mais provável com base em padrões estatísticos vastíssimos.</p>
-                </div>
-                <img src="https://placehold.co/300x150/f97316/ffffff?text=LLM+%3D+Acaso%3F" alt="LLM como acaso" class="slide-image">
             </div>
 
-            <!-- Slide 6: As LLMs são “casos Gettier” digitais? (Parte 2) -->
-            <div class="slide" id="slide-5">
+            <!-- Slide 5: LLMs como Casos Gettier (Parte 1) -->
+            <div class="slide" id="slide-4">
+                <div class="slide-number">5 / 8</div>
+                <div class="chat-message w-full">
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-user-tie mr-2"></i>Apresentador:
+                    </p>
+                    <p class="text-gray-800">
+                        Se a sorte pode invalidar o conhecimento humano, o que dizer das LLMs? 
+                        Será que as respostas certas delas são apenas <strong>"acertos por sorte"</strong>?
+                    </p>
+                </div>
+
+                <div class="concept-diagram">
+                    <div class="relative">
+                        <i class="fas fa-robot text-6xl text-orange-500"></i>
+                        <div class="absolute -top-2 -right-2">
+                            <i class="fas fa-dice text-red-500 text-2xl animation-pulse"></i>
+                        </div>
+                    </div>
+                    <i class="fas fa-question text-4xl text-yellow-500 mx-8"></i>
+                    <i class="fas fa-bullseye text-4xl text-green-500"></i>
+                </div>
+
                 <div class="llm-response w-full">
-                    <p class="font-bold text-lg text-green-800">Apresentador (Detalhando a Semelhança):</p>
-                    <p class="text-gray-800">Isso significa que:</p>
-                    <ul class="list-disc list-inside text-gray-800 ml-4 mt-2">
-                        <li>A "justificação" da LLM para uma resposta é baseada em **probabilidade**.</li>
-                        <li>A "verdade" da resposta pode ocorrer, mas sem uma **base de compreensão conceitual real**.</li>
-                        <li>Logo, uma resposta correta de uma LLM pode ser um **acaso sofisticado**, um "acerto por sorte", assim como nos casos de Gettier.</li>
-                    </ul>
+                    <p class="font-bold text-lg text-green-800">
+                        <i class="fas fa-robot mr-2"></i>Resposta (LLM):
+                    </p>
+                    <p class="text-gray-800">
+                        Sim! Em um sentido crítico, podemos argumentar que muitas respostas das LLMs se assemelham a 
+                        <strong>"casos Gettier" digitais</strong>. As LLMs não "entendem" ou "sabem" no sentido humano.
+                    </p>
+                    <p class="text-gray-800 mt-2">
+                        <i class="fas fa-chart-line mr-2 text-blue-500"></i>
+                        Elas operam com modelos probabilísticos e geram a resposta mais provável com base em 
+                        padrões estatísticos vastíssimos.
+                    </p>
                 </div>
-                <div class="llm-response w-full mt-4">
-                    <p class="font-bold text-lg text-green-800">Exemplo Gettier de LLM (Hipotético):</p>
-                    <p class="text-gray-800">Você pergunta: “Qual é o próximo eclipse solar visível no Brasil?”</p>
-                    <p class="text-gray-800">A LLM responde: “O próximo eclipse solar total visível no Brasil será em 12 de agosto de 2045.”</p>
-                    <p class="text-gray-800 mt-2">Ela acertou, mas não porque “sabe”. A frase apareceu milhões de vezes nos dados. Se os dados tivessem a informação errada mais frequentemente, ela diria a errada. Ela não verifica – só repete o mais provável.</p>
+
+                <div class="quote-highlight">
+                    "Probabilidade ≠ Compreensão"
                 </div>
-                <img src="https://placehold.co/450x200/fbbf24/000000?text=Eclipse+Solar%0A+2045%3F" alt="Exemplo de Eclipse da LLM" class="slide-image">
+            </div>
+
+            <!-- Slide 6: LLMs como Casos Gettier (Parte 2) -->
+            <div class="slide" id="slide-5">
+                <div class="slide-number">6 / 8</div>
+                <div class="llm-response w-full">
+                    <p class="font-bold text-lg text-green-800">
+                        <i class="fas fa-microscope mr-2"></i>Analisando a Semelhança:
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div class="text-center p-4 bg-red-100 rounded-lg border-l-4 border-red-500">
+                            <i class="fas fa-percentage text-red-500 text-2xl mb-2"></i>
+                            <p class="text-sm font-semibold">Justificação = Probabilidade</p>
+                        </div>
+                        <div class="text-center p-4 bg-yellow-100 rounded-lg border-l-4 border-yellow-500">
+                            <i class="fas fa-question-circle text-yellow-500 text-2xl mb-2"></i>
+                            <p class="text-sm font-semibold">Sem compreensão conceitual</p>
+                        </div>
+                        <div class="text-center p-4 bg-orange-100 rounded-lg border-l-4 border-orange-500">
+                            <i class="fas fa-dice text-orange-500 text-2xl mb-2"></i>
+                            <p class="text-sm font-semibold">Acerto = Acaso sofisticado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-message w-full mt-4">
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-lightbulb mr-2"></i>Exemplo Gettier de LLM (Hipotético):
+                    </p>
+                    <div class="bg-gray-50 p-4 rounded-lg mt-2">
+                        <p class="text-gray-800">
+                            <strong>Você pergunta:</strong> "Qual é o próximo eclipse solar visível no Brasil?"
+                        </p>
+                        <p class="text-gray-800 mt-2">
+                            <strong>LLM responde:</strong> "O próximo eclipse solar total visível no Brasil será em 12 de agosto de 2045."
+                        </p>
+                        <p class="text-gray-800 mt-2">
+                            <i class="fas fa-exclamation-triangle mr-2 text-orange-500"></i>
+                            Ela acertou, mas não porque "sabe". A frase apareceu milhões de vezes nos dados. 
+                            Se os dados tivessem a informação errada mais frequentemente, ela diria a errada. 
+                            <strong>Ela não verifica – só repete o mais provável.</strong>
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <!-- Slide 7: Internalismo x Externalismo -->
             <div class="slide" id="slide-6">
+                <div class="slide-number">7 / 8</div>
                 <div class="chat-message w-full">
-                    <p class="font-bold text-lg text-indigo-800">Apresentador:</p>
-                    <p class="text-gray-800">Essa perspectiva das LLMs nos leva diretamente a um debate fundamental na epistemologia: a justificativa do conhecimento precisa estar “na cabeça” da IA? Ou basta que o processo funcione de forma confiável?</p>
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-user-tie mr-2"></i>Apresentador:
+                    </p>
+                    <p class="text-gray-800">
+                        Essa perspectiva das LLMs nos leva a um debate fundamental: a justificativa do conhecimento 
+                        precisa estar "na cabeça" da IA? Ou basta que o processo funcione de forma confiável?
+                    </p>
                 </div>
-                <div class="llm-response w-full mt-4">
-                    <p class="font-bold text-lg text-green-800">Resposta (do LLM):</p>
-                    <p class="text-gray-800">Para os **internalistas**, a justificação precisa ser acessível à consciência do sujeito. Para uma LLM, sem "mente" consciente, isso é um grande desafio.</p>
-                    <p class="text-gray-800 mt-2">Para os **externalistas** (como o confiabilismo), basta que o processo que gerou a crença seja confiável. Se os algoritmos da LLM são confiáveis em gerar respostas verdadeiras, ela estaria mais próxima do conhecimento.</p>
-                    <p class="text-gray-800 mt-2 font-semibold">No entanto, o problema de Gettier ainda persiste: mesmo com um processo "confiável" (externalista), a verdade pode ser acidental. Uma LLM pode ser confiável, mas aquele "acaso Gettier" nos faz questionar o conhecimento genuíno.</p>
+
+                <div class="balance-scale">
+                    <div class="scale-arm">
+                        <div class="scale-plate" style="left: -40px;">
+                            <div>
+                                <i class="fas fa-brain text-xs"></i>
+                                <br>Interno
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scale-arm">
+                        <div class="scale-plate" style="right: -40px;">
+                            <div>
+                                <i class="fas fa-cogs text-xs"></i>
+                                <br>Externo
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <img src="https://placehold.co/350x180/3b82f6/ffffff?text=Internalismo%0A%E2%99%82%0AExternalismo" alt="Balança Internalismo Externalismo" class="slide-image">
+
+                <div class="llm-response w-full">
+                    <p class="font-bold text-lg text-green-800">
+                        <i class="fas fa-robot mr-2"></i>Resposta (LLM):
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold text-blue-800 mb-2">
+                                <i class="fas fa-brain mr-2"></i>Internalistas
+                            </h4>
+                            <p class="text-sm text-gray-700">
+                                A justificação precisa ser acessível à consciência. Para uma LLM sem "mente" consciente, 
+                                isso é um desafio.
+                            </p>
+                        </div>
+                        <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-bold text-green-800 mb-2">
+                                <i class="fas fa-cogs mr-2"></i>Externalistas
+                            </h4>
+                            <p class="text-sm text-gray-700">
+                                Basta que o processo seja confiável. Se os algoritmos da LLM são confiáveis, 
+                                ela estaria mais próxima do conhecimento.
+                            </p>
+                        </div>
+                    </div>
+                    <p class="text-gray-800 mt-4 font-semibold text-center">
+                        <i class="fas fa-exclamation-triangle mr-2 text-orange-500"></i>
+                        Mas o problema de Gettier ainda persiste: mesmo com um processo "confiável", 
+                        a verdade pode ser acidental!
+                    </p>
+                </div>
             </div>
 
             <!-- Slide 8: Conclusão -->
             <div class="slide" id="slide-7">
+                <div class="slide-number">8 / 8</div>
                 <div class="chat-message w-full">
-                    <p class="font-bold text-lg text-indigo-800">Apresentador (Final):</p>
-                    <p class="text-gray-800">Então, qual a grande lição que o problema de Gettier e as LLMs nos deixam sobre a natureza do conhecimento?</p>
+                    <p class="font-bold text-lg text-indigo-800">
+                        <i class="fas fa-user-tie mr-2"></i>Apresentador (Final):
+                    </p>
+                    <p class="text-gray-800">
+                        Então, qual a grande lição que o problema de Gettier e as LLMs nos deixam sobre a natureza do conhecimento?
+                    </p>
                 </div>
-                <div class="llm-response w-full mt-4">
-                    <p class="font-bold text-lg text-green-800">Resposta (do LLM - Final):</p>
-                    <p class="text-gray-800">A IA nos força a pensar: o que nos torna verdadeiros conhecedores? Talvez não seja apenas dar a resposta certa ou ser estatisticamente preciso.</p>
-                    <p class="text-gray-800 mt-2">O conhecimento humano parece envolver uma compreensão, uma reflexão e uma justificação com consciência, que vai além da mera predição probabilística.</p>
-                    <p class="text-gray-800 mt-2 font-bold text-center text-xl">E isso, por enquanto, ainda é algo distintamente humano.</p>
+
+                <div class="concept-diagram">
+                    <div class="relative">
+                        <i class="fas fa-brain text-6xl text-indigo-600"></i>
+                        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                            <span class="text-xs font-bold text-indigo-600">HUMANO</span>
+                        </div>
+                    </div>
+                    <div class="mx-8">
+                        <i class="fas fa-not-equal text-4xl text-red-500"></i>
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-robot text-6xl text-orange-500"></i>
+                        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                            <span class="text-xs font-bold text-orange-500">IA</span>
+                        </div>
+                    </div>
                 </div>
-                <h2 class="text-4xl font-bold text-center text-indigo-800 mt-8 w-full">“Saber não é só acertar.”</h2>
-                <h2 class="text-4xl font-bold text-center text-indigo-800 mt-4 w-full">“Saber é compreender.”</h2>
+
+                <div class="llm-response w-full">
+                    <p class="font-bold text-lg text-green-800">
+                        <i class="fas fa-robot mr-2"></i>Resposta Final:
+                    </p>
+                    <p class="text-gray-800">
+                        A IA nos força a pensar: <strong>o que nos torna verdadeiros conhecedores?</strong> 
+                        Talvez não seja apenas dar a resposta certa ou ser estatisticamente preciso.
+                    </p>
+                    <p class="text-gray-800 mt-2">
+                        <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                        O conhecimento humano parece envolver uma compreensão, uma reflexão e uma justificação 
+                        com consciência, que vai além da mera predição probabilística.
+                    </p>
+                </div>
+
+                <div class="text-center mt-8">
+                    <div class="quote-highlight text-3xl mb-4">
+                        "Saber não é só acertar."
+                    </div>
+                    <div class="quote-highlight text-3xl">
+                        "Saber é compreender."
+                    </div>
+                    <div class="mt-6">
+                        <i class="fas fa-heart text-red-500 text-4xl animation-pulse"></i>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-600 mt-2">
+                        E isso, por enquanto, ainda é algo distintamente humano.
+                    </p>
+                </div>
             </div>
         </div>
 
         <!-- Navigation Buttons -->
         <div class="flex justify-between w-full mt-8">
-            <button id="prevBtn" class="nav-button" disabled>Anterior</button>
-            <button id="nextBtn" class="nav-button">Próximo</button>
+            <button id="prevBtn" class="nav-button" disabled>
+                <i class="fas fa-chevron-left mr-2"></i>Anterior
+            </button>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                <span id="slideCounter">1 / 8</span>
+            </div>
+            <button id="nextBtn" class="nav-button">
+                Próximo<i class="fas fa-chevron-right ml-2"></i>
+            </button>
         </div>
     </div>
 
@@ -249,15 +757,29 @@
         const slides = document.querySelectorAll('.slide');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        const progressDots = document.querySelectorAll('.progress-dot');
         let currentSlide = 0;
 
         function showSlide(index) {
+            // Remove active class from all slides and progress dots
             slides.forEach((slide, i) => {
                 slide.classList.remove('active');
                 if (i === index) {
                     slide.classList.add('active');
                 }
             });
+            
+            progressDots.forEach((dot, i) => {
+                dot.classList.remove('active');
+                if (i === index) {
+                    dot.classList.add('active');
+                }
+            });
+            
+            // Update counter
+            slideCounter.textContent = `${index + 1} / ${slides.length}`;
+            
             updateButtons();
         }
 
@@ -280,15 +802,36 @@
             }
         });
 
+        // Click on progress dots to navigate
+        progressDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            } else if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        });
+
         // Initialize first slide
         showSlide(currentSlide);
 
-        // Ensure responsiveness on resize
-        window.addEventListener('resize', () => {
-            // No specific recalculations needed for this simple layout,
-            // as Tailwind's responsive classes handle most of it.
-            // But if there were canvas or complex elements, this is where
-            // you'd trigger redraws or size adjustments.
+        // Add click animations to interactive icons
+        document.querySelectorAll('.interactive-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                icon.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    icon.style.transform = 'scale(1)';
+                }, 200);
+            });
         });
     </script>
 </body>
